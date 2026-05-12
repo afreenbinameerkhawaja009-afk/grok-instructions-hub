@@ -1,1 +1,126 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Dev Dashboard 2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; }
+    .task-complete { text-decoration: line-through; opacity: 0.6; }
+  </style>
+</head>
+<body class="bg-gray-950 text-white min-h-screen p-6">
 
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-5xl font-bold text-center mb-2 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent">
+      🚀 Universal Dev Dashboard 2025
+    </h1>
+    <p class="text-center text-gray-400 mb-12">All-in-One Developer Workspace</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- Todo Manager -->
+      <div class="bg-gray-900 rounded-3xl p-8">
+        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+          <i class="fas fa-tasks text-purple-500"></i> Task Manager
+        </h2>
+        
+        <div class="flex gap-3 mb-6">
+          <input id="taskInput" type="text" placeholder="Naya task add karo..." 
+                 class="flex-1 bg-gray-800 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg">
+          <button onclick="addTask()" 
+                  class="bg-gradient-to-r from-purple-600 to-pink-600 px-10 rounded-2xl font-semibold hover:scale-105 transition-all">
+            Add
+          </button>
+        </div>
+
+        <div id="taskList" class="space-y-3 min-h-[300px]"></div>
+      </div>
+
+      <!-- Resources -->
+      <div class="bg-gray-900 rounded-3xl p-8">
+        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+          <i class="fas fa-book text-cyan-500"></i> Quick Commands
+        </h2>
+        <div class="grid grid-cols-2 gap-4">
+          <div onclick="copyCommand('python3 app.py')" class="bg-gray-800 hover:bg-gray-700 p-5 rounded-2xl cursor-pointer transition">
+            <strong>Python</strong><br><code class="text-xs text-gray-400">python3 app.py</code>
+          </div>
+          <div onclick="copyCommand('npm start')" class="bg-gray-800 hover:bg-gray-700 p-5 rounded-2xl cursor-pointer transition">
+            <strong>Node.js</strong><br><code class="text-xs text-gray-400">npm start</code>
+          </div>
+          <div onclick="copyCommand('docker-compose up -d')" class="bg-gray-800 hover:bg-gray-700 p-5 rounded-2xl cursor-pointer transition">
+            <strong>Docker</strong><br><code class="text-xs text-gray-400">docker-compose up</code>
+          </div>
+          <div onclick="copyCommand('git push origin main')" class="bg-gray-800 hover:bg-gray-700 p-5 rounded-2xl cursor-pointer transition">
+            <strong>Git Push</strong><br><code class="text-xs text-gray-400">git push origin main</code>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-12 text-gray-500">
+      Universal Developer Dashboard 2025 • Powered by Grok
+    </div>
+  </div>
+
+  <script>
+    function addTask() {
+      const input = document.getElementById('taskInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      let tasks = JSON.parse(localStorage.getItem('devTasks') || '[]');
+      tasks.push({ id: Date.now(), text, completed: false });
+      localStorage.setItem('devTasks', JSON.stringify(tasks));
+      
+      input.value = '';
+      renderTasks();
+    }
+
+    function toggleTask(id) {
+      let tasks = JSON.parse(localStorage.getItem('devTasks') || '[]');
+      const task = tasks.find(t => t.id === id);
+      if (task) task.completed = !task.completed;
+      localStorage.setItem('devTasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function deleteTask(id) {
+      let tasks = JSON.parse(localStorage.getItem('devTasks') || '[]');
+      tasks = tasks.filter(t => t.id !== id);
+      localStorage.setItem('devTasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      const tasks = JSON.parse(localStorage.getItem('devTasks') || '[]');
+      
+      list.innerHTML = tasks.map(task => `
+        <div class="bg-gray-800 rounded-2xl p-5 flex items-center justify-between group">
+          <div class="flex items-center gap-4">
+            <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                   onchange="toggleTask(${task.id})" class="w-6 h-6 accent-purple-500">
+            <span class="\( {task.completed ? 'task-complete' : ''} text-lg"> \){task.text}</span>
+          </div>
+          <button onclick="deleteTask(${task.id})" class="text-red-500 opacity-0 group-hover:opacity-100 transition">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function copyCommand(cmd) {
+      navigator.clipboard.writeText(cmd).then(() => {
+        alert('✅ Copied: ' + cmd);
+      });
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>
