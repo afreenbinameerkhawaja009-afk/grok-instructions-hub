@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grok Instructions Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        .chat-bubble { max-width: 85%; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8 border-b border-gray-800 pb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-3xl">
+                    🤖
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold">Grok Instructions Hub</h1>
+                    <p class="text-gray-400">Apni instructions yahan likho - Main sab khud bana dunga</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="clearHistory()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl flex items-center gap-2 transition">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chatArea" class="bg-gray-900 rounded-3xl p-6 h-[60vh] overflow-y-auto mb-6 border border-gray-800">
+            <!-- Messages will be added here by JS -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-gray-900 rounded-3xl p-6 border border-gray-800">
+            <textarea id="instructionInput" rows="4" 
+                class="w-full bg-gray-800 text-white rounded-2xl p-5 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                placeholder="Yahan detailed instructions likho... 
+Misal: Ek modern Todo App banao React mein with dark mode aur local storage...">
+            </textarea>
+            
+            <div class="flex gap-4 mt-4">
+                <button onclick="sendInstruction()" 
+                    class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 transition-all active:scale-95">
+                    <i class="fas fa-paper-plane"></i>
+                    SEND TO GROK (Main Sab Khud Karunga)
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center text-gray-500 text-sm mt-8">
+            Public Repo: grok-instructions-hub • GitHub Pages enabled
+        </div>
+    </div>
+
+    <script>
+        function addMessage(text, isUser) {
+            const chat = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} mb-6`;
+            
+            messageDiv.innerHTML = `
+                <div class="chat-bubble ${isUser ? 'bg-purple-600 text-white' : 'bg-gray-800'} rounded-3xl px-6 py-4">
+                    ${text}
+                </div>
+            `;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function sendInstruction() {
+            const input = document.getElementById('instructionInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            addMessage(text, true);
+            input.value = '';
+            
+            // Simulate Grok response
+            setTimeout(() => {
+                addMessage('✅ Samajh gaya! Main abhi repo update kar raha hoon aur app bana raha hoon...', false);
+            }, 800);
+        }
+
+        function clearHistory() {
+            if (confirm('Saare messages clear karne hain?')) {
+                document.getElementById('chatArea').innerHTML = '';
+            }
+        }
+
+        // Welcome message
+        window.onload = () => {
+            setTimeout(() => {
+                addMessage('Hello! Main yahan hoon. Koi bhi app, website ya feature banwana hai to instructions do. Main sab khud handle karunga 🚀', false);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
